@@ -55,13 +55,13 @@ The code for distortion correction can be found in "perspective_transform.py". I
 
 The code for my perspective transform includes a function called warp(), which appears on line 49 in the file "detect_lane_lines.py" and the innards are in "perspective_transform.py". The warp() function takes as inputs an image (combined), as well as matrix (mtx) and destination (dst) points. I chose to hardcode the mtx and destination points by grabbing them from previously saved values during the camera calibration.
 
-![perspective_transform][output_images/perspective_transform.png]
+![perspective_transform](output_images/perspective_transform.png)
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 I then found the lines of the warped image as seen in "find_lines.py". This function uses the sliding window search approach. It returns a yaxis, leftx, and rightx values in order to fid a 2nd order polynomial using the equation f(y) = Ay^2 + By + C. This resulted in the image below.
 
-![polyfit][output_images/polyfit2.png]
+![polyfit](output_images/polyfit2.png)
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -71,7 +71,7 @@ I did this in lines 53 through 71 in my code in `detect_lane_lines.py`
 
 I implemented this step on line 94 in my code in `detect_lane_lines.py` in the function `draw_lines()`.  Here is an example of my result on a test image:
 
-![result][output_images/result.png]
+![result](output_images/result.png)
 
 ---
 
