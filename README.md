@@ -39,7 +39,7 @@ I start by preparing `objpoints`, which will be the (x, y, z) coordinates of the
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
-![chessboards]["output_images/camera_cal_org.png"]
+![chessboards](output_images/camera_cal_org.png)
 
 ###Pipeline (single images)
 
