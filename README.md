@@ -66,7 +66,7 @@ I then found the lines of the warped image as seen in `find_lines.py`. This func
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines 53 through 71 in my code in `detect_lane_lines.py`
+I did this in lines 53 through 71 in my code in `detect_lane_lines.py`. The results I got (522.09, 657.23) seem congruous with the U.S. government specifications for highway curvature. If you were going 60 mph on a highway the curve radius specification would be about 669 which is within the neighborhood of the results I attained.
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
