@@ -42,7 +42,8 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ![chessboard_original](output_images/camera_cal_org.png)![chessboard_undistorted](output_images/camera_cal_undist.png)
 
 ###Pipeline (single images)
-The pipeline is found in "detect_lane_lines.py" The image I will be modifying will be this one:
+The pipeline is found in "detect_lane_lines.py". The image I will be modifying will be this one:
+
 ![original_image](output_images/test5.jpg)
 
 ####1. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
