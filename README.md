@@ -47,7 +47,7 @@ The pipeline is found in "detect_lane_lines.py". The image I will be modifying w
 ![original_image](output_images/test5.jpg)
 
 ####1. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in another_file.py). This process is broken up into four steps. First I converted the image to HSV because that gave better contrast under a variety of lighting conditions. The rest of the threshold steps can be found in "threshold.py" where I use three different thresholding techniques to further transform the image. Here's an example of my output for this step.
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines 23 through 36 in detect_lane_lines.py). This process is broken up into four steps. First I converted the image to HSV because that gave better contrast under a variety of lighting conditions. The rest of the threshold steps can be found in "threshold.py" where I use three different thresholding techniques to further transform the image. Here's an example of my output for this step.
 ![threshold](output_images/thresholded_image.png)
 ####2. Provide an example of a distortion-corrected image.
 The code for distortion correction can be found in "perspective_transform.py". It is done with cv2.undistort given the mtx and mdist values that were calculated and saved during the camera calibration process.
