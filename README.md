@@ -54,7 +54,7 @@ The code for distortion correction can be found in "perspective_transform.py". I
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called warp(), which appears on line 49 in the file "detect_lane_lines.py" and the innards are in "perspective_transform.py". The warp() function takes as inputs an image (combined), as well as matrix (mtx) and destination (dst) points. I chose to hardcode the mtx and destination points by grabbing them from previously saved values during the camera calibration.
+The code for my perspective transform includes a function called warp(), which appears on line 49 in the file "detect_lane_lines.py" and the innards are in "perspective_transform.py". The warp() function takes as inputs an image (combined), as well as matrix (mtx) and destination (dst) points. I got the mtx and destination points from previously saved values during the camera calibration.
 
 ![perspective_transform](output_images/perspective_transform.png)
 
