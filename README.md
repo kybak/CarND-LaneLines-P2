@@ -1,6 +1,5 @@
 ##Writeup
 
----
 
 **Advanced Lane Finding Project**
 
