@@ -74,7 +74,7 @@ def process_video(image):
     # This finds the lines through sliding window search
     lines, yaxis, leftx, rightx, dfc = find_lines(warped_im)
 
-    # dfc = dfc * ym_per_pix
+    dfc = dfc * ym_per_pix * .01
 
     # Polyfit
     left_fit = np.polyfit(yaxis, leftx, 2)
