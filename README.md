@@ -42,27 +42,26 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ![chessboard_original](output_images/camera_cal_org.png)![chessboard_undistorted](output_images/camera_cal_undist.png)
 
 ###Pipeline (single images)
+The image I will be modifying will be this one:
+![original_image](output_images/test5.jpg)
 
 ####1. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in another_file.py). This process is broken up into four steps. First I converted the image to HSV because that gave better contrast under a variety of lighting conditions. The rest of the threshold steps can be found in "threshold.py" where I use three different thresholding techniques to further transform the image. Here's an example of my output for this step.
 ![threshold](output_images/thresholded_image.png)
 ####2. Provide an example of a distortion-corrected image.
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one: 
-![alt text][image2]
-
 The code for distortion correction can be found in "perspective_transform.py". It is done with cv2.undistort given the mtx and mdist values that were calculated and saved during the camera calibration process.
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 The code for my perspective transform includes a function called warp(), which appears on line 49 in the file "detect_lane_lines.py" and the innards are in "perspective_transform.py". The warp() function takes as inputs an image (combined), as well as matrix (mtx) and destination (dst) points. I chose to hardcode the mtx and destination points by grabbing them from previously saved values during the camera calibration.
 
-![alt text][image4]
+![perspective_transform][output_images/perspective_transform.png]
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 I then found the lines of the warped image as seen in "find_lines.py". This function uses the sliding window search approach. It returns a yaxis, leftx, and rightx values in order to fid a 2nd order polynomial using the equation f(y) = Ay^2 + By + C. This resulted in the image below.
 
-![alt text][image5]
+![polyfit][output_images/polyfit2.png]
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -72,7 +71,7 @@ I did this in lines 53 through 71 in my code in `detect_lane_lines.py`
 
 I implemented this step on line 94 in my code in `detect_lane_lines.py` in the function `draw_lines()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+![result][output_images/result.png]
 
 ---
 
@@ -80,7 +79,7 @@ I implemented this step on line 94 in my code in `detect_lane_lines.py` in the f
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./output.mp4)
+Here's a [link to my video result](output.mp4)
 
 ---
 
