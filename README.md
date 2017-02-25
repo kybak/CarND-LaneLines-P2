@@ -45,7 +45,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 ####1. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in another_file.py). This process is broken up into four steps. First I converted the image to HSV because that gave better contrast under a variety of lighting conditions. The rest of the threshold steps can be found in "threshold.py" where I use three different thresholding techniques to further transform the image. Here's an example of my output for this step.
-![alt text][image3]
+![threshold](output_images/thresholded_image.png)
 ####2. Provide an example of a distortion-corrected image.
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one: 
 ![alt text][image2]
