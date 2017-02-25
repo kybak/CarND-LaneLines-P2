@@ -67,6 +67,8 @@ def dir_threshold(img, sobel_kernel=3, thresh=(0, np.pi/2)):
 
     return binary_output
 
+
+# --NOT IN USE--
 # def color_threshold(s_channel, s_thresh):
 #     s_binary = np.zeros_like(s_channel)
 #     s_binary[(s_channel >= s_thresh[0]) & (s_channel <= s_thresh[1])] = 1

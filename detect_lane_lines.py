@@ -2,7 +2,6 @@ from threshold import abs_sobel_thresh, mag_thresh, dir_threshold
 from perspective_transorm import warp
 from draw_lines import draw_lines
 from find_lines import find_lines
-from Line import Line
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,14 +9,14 @@ import cv2
 import pickle
 from moviepy.editor import VideoFileClip
 
-Line = Line()
 
 def process_video(image):
-    # image = mpimg.imread('test_images/test5.jpg')
-    # image = mpimg.imread('test_images/straight_lines1.jpg')
-
-    # This converts the image to grayscale --NOT IN USE--
-    # image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    '''
+    This function takes in an image either from a
+    sequence of images or a single image and calls
+    all methods responsible for undistorting,
+    warping, and thresholding the image.
+    '''
 
     img = np.copy(image)
 
@@ -36,71 +35,46 @@ def process_video(image):
     combined = np.zeros_like(dir_binary)
     combined[((gradx == 1)) | ((mag_binary == 1) & (dir_binary == 1))] = 1
 
-    # combined[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) & (dir_binary == 1))] = 1 --NOT IN USE--
 
-    # This plots the result
-    # f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24, 9))
-    # f.tight_layout()
-    #
-    # ax1.imshow(image)
-    # ax1.set_title('Original Image', fontsize=50)
-    #
-    # ax2.imshow(combined, cmap='gray')
-    # ax2.set_title('Thresholded Magnitude', fontsize=50)
-    #
-    # plt.subplots_adjust(left=0., right=1, top=0.9, bottom=0.)
-    # plt.show()
 
     # ############################## PERSPECTIVE TRANSFORM ############################## #
 
-    # Read in the saved camera matrix and distortion coefficients
-    # These are the arrays you calculated using cv2.calibrateCamera()
+    # This reads in the saved camera matrix and distortion coefficients
+    # These are the arrays calculated using cv2.calibrateCamera()
     dist_pickle = pickle.load( open( "calibration_wide/19.p", "rb" ) )
     mtx = dist_pickle["mtx"]
     dist = dist_pickle["dist"]
 
-
-    # Read in an image
-    # img = mpimg.imread('test_images/straight_lines1.jpg')
-    # plt.imshow(img)
-
+    # This is the perspective transform method
     warped_im, undist, Minv = warp(combined, mtx, dist)
 
     # ############################## FIND LINES AND RADII ############################## #
 
-    def get_radius(left_fit, right_fit):
-        # Define y-value where we want radius of curvature
-        # I'll choose the maximum y-value, corresponding to the bottom of the image
-        y_eval = np.max(ploty)
-        left_curverad = ((1 + (2 * left_fit[0] * y_eval + left_fit[1]) ** 2) ** 1.5) / np.absolute(2 * left_fit[0])
-        right_curverad = ((1 + (2 * right_fit[0] * y_eval + right_fit[1]) ** 2) ** 1.5) / np.absolute(2 * right_fit[0])
-        return left_curverad, right_curverad
-        # Example values: 1926.74 1908.48
-
-    lines, yaxis, leftx, rightx = find_lines(warped_im, Line)
-
-    if (len(Line.recent_xfitted) >= 50):
-        Line.recent_xfitted[0].insert(0, leftx[0])
-        Line.recent_xfitted[1].insert(0, rightx[0])
-        Line.recent_xfitted[0].pop()
-        Line.recent_xfitted[1].pop()
-
-        Line.bestx[0] = np.average(Line.recent_xfitted[0])
-        Line.bestx[1] = np.average(Line.recent_xfitted[1])
-    else:
-        if (len(Line.bestx) == 0):
-            Line.bestx.append(leftx[0])
-            Line.bestx.append(rightx[0])
-        else:
-            Line.bestx[0] = leftx[0]
-            Line.bestx[1] = rightx[0]
-
-        Line.recent_xfitted[0].append(leftx[0])
-        Line.recent_xfitted[1].append(rightx[0])
-
-    # Define conversions in x and y from pixels space to meters
+    # This defines conversions in x and y from pixels space to meters
     ym_per_pix = 30/720 # meters per pixel in y dimension
     xm_per_pix = 3.7/700 # meters per pixel in x dimension
+
+    def get_radius(left_fit, right_fit):
+        '''
+        This function determines the radii from the polyfit
+        '''
+
+        # This gets a new polyfit with pixel-meter conversions
+        left_fit = np.polyfit(yaxis * ym_per_pix, leftx * xm_per_pix, 2)
+        right_fit = np.polyfit(yaxis * ym_per_pix, rightx * xm_per_pix, 2)
+
+        # This defines a y-value where we want radius of curvature
+        # The maximum y-value is chosen, corresponding to the bottom of the image
+        y_eval = np.max(ploty)
+        left_curverad = ((1 + (2 * left_fit[0] * y_eval * ym_per_pix + left_fit[1]) ** 2) ** 1.5) / np.absolute(2 * left_fit[0])
+        right_curverad = ((1 + (2 * right_fit[0] * y_eval * ym_per_pix + right_fit[1]) ** 2) ** 1.5) / np.absolute(2 * right_fit[0])
+        return left_curverad, right_curverad
+
+
+    # This finds the lines through sliding window search
+    lines, yaxis, leftx, rightx, dfc = find_lines(warped_im)
+
+    # dfc = dfc * ym_per_pix
 
     # Polyfit
     left_fit = np.polyfit(yaxis, leftx, 2)
@@ -110,34 +84,27 @@ def process_video(image):
     left_fitx = left_fit[0] * ploty ** 2 + left_fit[1] * ploty + left_fit[2]
     right_fitx = right_fit[0] * ploty ** 2 + right_fit[1] * ploty + right_fit[2]
 
-    left_rad, right_rad = get_radius(left_fitx, right_fitx)
-    #
-    # f, (ax1, ax2) = plt.subplots(1, 2, figsize=(20,10))
-    #
-    # plt.plot(leftx, ploty, color='yellow')
-    # plt.plot(rightx, ploty, color='yellow')
-    # plt.xlim(0, 1280)
-    # plt.ylim(720, 0)
-    #
-    # ax1.set_title('Source Image')
-    # ax1.imshow(warped_im)
-    # ax2.set_title('Warped Image')
-    # ax2.imshow(lines)
-    # plt.show()
+    # This is the radius of curvature
+    left_rad, right_rad = get_radius(leftx, rightx)
+
 
     # ############################## DRAW LINES ############################## #
 
 
-
-    result = draw_lines(warped_im, image, left_fitx, right_fitx, ploty, Minv, undist)
+    # This draws the lines on an image either of a sequence of images or on a single image.
+    result = draw_lines(warped_im, image, left_fitx, right_fitx, ploty, Minv, undist, [left_rad, right_rad], dfc)
 
     return result
+
+# This is used on only single images --NOT IN USE--
+# image = mpimg.imread('test_images/test5.jpg')
+# process_video(image)
 
 
 # ############################## PLAY VIDEO ############################## #
 
-
+# This reads in the video file and calls the function to process the video and detect the lane lines.
 output = 'output3.mp4'
-clip1 = VideoFileClip("challenge_video.mp4")
+clip1 = VideoFileClip("project_video.mp4")
 white_clip = clip1.fl_image(process_video) #NOTE: this function expects color images!!
 white_clip.write_videofile(output, audio=False)

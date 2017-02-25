@@ -16,6 +16,7 @@ imgpoints = [] # 2D points in image plane
 objp = np.zeros((6*9,3), np.float32)
 objp[:,:2] = np.mgrid[0:9,0:6].T.reshape(-1,2) # x, y coordinated
 
+
 for idx, fname in enumerate(images):
     # This reads in each image file
     img = mpimg.imread(fname)
@@ -33,12 +34,12 @@ for idx, fname in enumerate(images):
 
         # This draws and displays the corners
         img = cv2.drawChessboardCorners(img, (9,6), corners, ret)
-        plt.imshow(img)
-        # plt.show()
 
+    # This calibrates the camera and undistorts the image
     ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
     undist = cv2.undistort(img, mtx, dist, None, mtx)
 
+    # This saves the results to disk for later use
     dist_pickle = {}
     dist_pickle["mtx"] = mtx
     dist_pickle["dist"] = dist
